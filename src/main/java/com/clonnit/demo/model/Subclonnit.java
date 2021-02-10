@@ -1,15 +1,14 @@
 package com.clonnit.demo.model;
 
-import com.sun.istack.NotNull;
+import com.sun.istack.internal.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.awt.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -28,12 +27,11 @@ public class Subclonnit {
     private String description;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private ArrayList<Post> postList;
+    private List<Post> postList;
 
     @NotNull
     private LocalDateTime created;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;

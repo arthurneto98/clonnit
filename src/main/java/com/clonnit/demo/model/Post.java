@@ -1,7 +1,7 @@
 package com.clonnit.demo.model;
 
-import com.sun.istack.NotNull;
-import com.sun.istack.Nullable;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,12 +36,10 @@ public class Post {
     @NotNull
     private LocalDateTime created;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subclonnit_id", referencedColumnName = "id")
     private Subclonnit subclonnit;
