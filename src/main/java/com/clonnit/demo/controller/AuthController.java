@@ -1,5 +1,7 @@
 package com.clonnit.demo.controller;
 
+import com.clonnit.demo.dto.AuthResponseDto;
+import com.clonnit.demo.dto.LoginRequestDto;
 import com.clonnit.demo.dto.RegisterRequestDto;
 import com.clonnit.demo.service.AuthService;
 import lombok.AllArgsConstructor;
@@ -21,5 +23,10 @@ public class AuthController {
         authService.signup(registerRequest);
 
         return new ResponseEntity<>("Registo de usuário completo", HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public AuthResponseDto login(@RequestBody LoginRequestDto loginRequest) {
+        return authService.login(loginRequest);
     }
 }
