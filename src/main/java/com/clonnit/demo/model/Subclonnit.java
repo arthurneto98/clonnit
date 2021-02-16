@@ -29,10 +29,11 @@ public class Subclonnit {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Post> postList;
 
-    @NotNull
     private LocalDateTime created;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    //postnumber transient?
 }

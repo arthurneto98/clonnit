@@ -31,7 +31,7 @@ public class Post {
     private String content;
 
     @NotNull
-    private Integer voteCount = 0;
+    private Integer voteCount;
 
     @NotNull
     private LocalDateTime created;
