@@ -16,13 +16,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SubclonnitService {
     private final SubclonnitRepository subclonnitRepository;
+    private final DtoService dtoService;
 
     @Transactional
     public SubclonnitDto saveSubclonnit(SubclonnitDto dto) {
-        Subclonnit subclonnit = Subclonnit.builder()
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .build();
+        Subclonnit subclonnit = dtoService.mapDtoToSubclonnit(dto);
 
         subclonnitRepository.save(subclonnit);
         dto.setId(subclonnit.getId());
@@ -36,11 +34,6 @@ public class SubclonnitService {
     }
 
     private SubclonnitDto mapDto(Subclonnit subclonnit) {
-        return SubclonnitDto.builder()
-                .id(subclonnit.getId())
-                .name(subclonnit.getName())
-                .description(subclonnit.getDescription())
-                .postNumber(subclonnit.getPostList().size())
-                .build();
+        return dtoService.mapSubclonnitToDto(subclonnit);
     }
 }

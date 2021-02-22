@@ -20,10 +20,10 @@ import java.time.LocalDateTime;
 @Service
 @AllArgsConstructor
 public class AuthService {
-    final private PasswordEncoder passwordEncoder;
-    final private UserRepository userRepository;
-    final private AuthenticationManager authenticationManager;
-    final private JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public void signup(RegisterRequestDto registerRequest) {

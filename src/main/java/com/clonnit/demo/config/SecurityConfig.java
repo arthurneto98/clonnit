@@ -18,8 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    final private UserDetailsService userDetailsService;
-    final private JwtAuthFilter jwtAuthFilter;
+    private final UserDetailsService userDetailsService;
+    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override
