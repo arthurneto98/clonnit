@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SubclonnitDto {
+public class VoteDto {
     private Integer id;
-    private String name;
-    private String description;
-    private Integer postNumber;
+    private String voteType;
+    private Integer postId;
+    private Integer userId;
 }
