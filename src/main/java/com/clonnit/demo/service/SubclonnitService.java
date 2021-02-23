@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,10 +31,12 @@ public class SubclonnitService {
 
     @Transactional(readOnly = true)
     public List<SubclonnitDto> subclonnitList() {
-        return subclonnitRepository.findAll().stream().map(this::mapDto).collect(Collectors.toList());
+        return subclonnitRepository.findAll().stream().map(dtoService::mapSubclonnitToDto).collect(Collectors.toList());
     }
 
-    private SubclonnitDto mapDto(Subclonnit subclonnit) {
-        return dtoService.mapSubclonnitToDto(subclonnit);
+    @Transactional(readOnly = true)
+    public SubclonnitDto getSubclonnit(Integer id) {
+        Optional<Subclonnit> subclonnit = subclonnitRepository.findById(id);
+        return subclonnit.map(dtoService::mapSubclonnitToDto).orElse(null);
     }
 }

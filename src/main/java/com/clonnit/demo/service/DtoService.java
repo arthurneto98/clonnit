@@ -5,12 +5,27 @@ import com.clonnit.demo.dto.SubclonnitDto;
 import com.clonnit.demo.dto.VoteDto;
 import com.clonnit.demo.model.Post;
 import com.clonnit.demo.model.Subclonnit;
+import com.clonnit.demo.model.User;
 import com.clonnit.demo.model.Vote;
 import com.clonnit.demo.model.enums.VoteTypeEnum;
+import com.clonnit.demo.repository.PostRepository;
+import com.clonnit.demo.repository.SubclonnitRepository;
+import com.clonnit.demo.repository.UserRepository;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
+@Service
+@AllArgsConstructor
+@Slf4j
 public class DtoService {
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+    private final SubclonnitRepository subclonnitRepository;
+
     public SubclonnitDto mapSubclonnitToDto(Subclonnit subclonnit) {
         return SubclonnitDto.builder()
                 .id(subclonnit.getId())
@@ -39,8 +54,8 @@ public class DtoService {
     public Vote mapDtoToVote(VoteDto dto) {
         return Vote.builder()
                 .voteType(VoteTypeEnum.valueOf(dto.getVoteType()))
-                //get post by id
-                //get user by id
+                .post(getPostOrNull(dto.getPostId()))
+                .user(getUserOrNull(dto.getUserId()))
                 .build();
     }
 
@@ -64,8 +79,24 @@ public class DtoService {
                 .content(dto.getContent())
                 .voteCount(dto.getVoteCount())
                 .created(LocalDateTime.parse(dto.getCreated()))
-                //get user by id
-                //get subclonnit by id
+                .user(getUserOrNull(dto.getUserId()))
+                .subclonnit(getSubclonnitOrNull(dto.getSubClonnitId()))
                 .build();
+    }
+
+    //TODO migrar
+    private Post getPostOrNull(Integer id) {
+        Optional<Post> post = postRepository.findById(id);
+        return post.orElse(null);
+    }
+
+    private User getUserOrNull(Integer id) {
+        Optional<User> post = userRepository.findById(id);
+        return post.orElse(null);
+    }
+
+    private Subclonnit getSubclonnitOrNull(Integer id) {
+        Optional<Subclonnit> post = subclonnitRepository.findById(id);
+        return post.orElse(null);
     }
 }

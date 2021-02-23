@@ -18,17 +18,25 @@ import java.util.List;
 public class SubclonnitController {
     private final SubclonnitService subclonnitService;
 
-    @PostMapping(value = "")
-    public ResponseEntity<SubclonnitDto> createSubclonnit(@RequestBody SubclonnitDto subclonnit) {
+    @PostMapping
+    public ResponseEntity<SubclonnitDto> create(@RequestBody SubclonnitDto subclonnit) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(subclonnitService.saveSubclonnit(subclonnit));
     }
 
     @GetMapping
-    public ResponseEntity<List<SubclonnitDto>> subclonnitList() {
+    public ResponseEntity<List<SubclonnitDto>> list() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(subclonnitService.subclonnitList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SubclonnitDto> getById(@PathVariable Integer id) {
+        SubclonnitDto dto = subclonnitService.getSubclonnit(id);
+        return dto != null ?
+                ResponseEntity.status(HttpStatus.OK).body(dto) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }
