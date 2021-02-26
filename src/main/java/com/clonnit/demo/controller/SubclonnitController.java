@@ -29,7 +29,7 @@ public class SubclonnitController {
     public ResponseEntity<List<SubclonnitDto>> list() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(subclonnitService.subclonnitList());
+                .body(subclonnitService.listSubclonnit());
     }
 
     @GetMapping("/{id}")

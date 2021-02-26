@@ -30,7 +30,7 @@ public class SubclonnitService {
     }
 
     @Transactional(readOnly = true)
-    public List<SubclonnitDto> subclonnitList() {
+    public List<SubclonnitDto> listSubclonnit() {
         return subclonnitRepository.findAll().stream().map(dtoService::mapSubclonnitToDto).collect(Collectors.toList());
     }
 
