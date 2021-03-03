@@ -1,12 +1,10 @@
 package com.clonnit.demo.service;
 
+import com.clonnit.demo.dto.CommentDto;
 import com.clonnit.demo.dto.PostDto;
 import com.clonnit.demo.dto.SubclonnitDto;
 import com.clonnit.demo.dto.VoteDto;
-import com.clonnit.demo.model.Post;
-import com.clonnit.demo.model.Subclonnit;
-import com.clonnit.demo.model.User;
-import com.clonnit.demo.model.Vote;
+import com.clonnit.demo.model.*;
 import com.clonnit.demo.model.enums.VoteTypeEnum;
 import com.clonnit.demo.repository.PostRepository;
 import com.clonnit.demo.repository.SubclonnitRepository;
@@ -25,6 +23,52 @@ public class DtoService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final SubclonnitRepository subclonnitRepository;
+
+    public CommentDto mapCommentToDto(Comment comment) {
+        return CommentDto.builder()
+                .id(comment.getId())
+                .postId(comment.getPost().getId())
+                .userId(comment.getUser().getId())
+                .userUsername(comment.getUser().getUsername())
+                .content(comment.getContent())
+                .created(comment.getCreated())
+                .build();
+    }
+
+    public Comment mapDtoToComment(CommentDto dto) {
+        return Comment.builder()
+                .id(dto.getId())
+                .post(getPostOrNull(dto.getPostId()))
+                .user(getUserOrNull(dto.getUserId()))
+                .content(dto.getContent())
+                .created(dto.getCreated())
+                .build();
+    }
+
+    public PostDto mapPostToDto(Post post) {
+        return PostDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .url(post.getUrl())
+                .content(post.getContent())
+                .voteCount(post.getVoteCount())
+                .created(post.getCreated().toString())
+                .userId(post.getUser().getId())
+                .subClonnitId(post.getSubclonnit().getId())
+                .build();
+    }
+
+    public Post mapDtoToPost(PostDto dto) {
+        return Post.builder()
+                .title(dto.getTitle())
+                .url(dto.getUrl())
+                .content(dto.getContent())
+                .voteCount(dto.getVoteCount())
+                .created(LocalDateTime.parse(dto.getCreated()))
+                .user(getUserOrNull(dto.getUserId()))
+                .subclonnit(getSubclonnitOrNull(dto.getSubClonnitId()))
+                .build();
+    }
 
     public SubclonnitDto mapSubclonnitToDto(Subclonnit subclonnit) {
         return SubclonnitDto.builder()
@@ -56,31 +100,6 @@ public class DtoService {
                 .voteType(VoteTypeEnum.valueOf(dto.getVoteType()))
                 .post(getPostOrNull(dto.getPostId()))
                 .user(getUserOrNull(dto.getUserId()))
-                .build();
-    }
-
-    public PostDto mapPostToDto(Post post) {
-        return PostDto.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .url(post.getUrl())
-                .content(post.getContent())
-                .voteCount(post.getVoteCount())
-                .created(post.getCreated().toString())
-                .userId(post.getUser().getId())
-                .subClonnitId(post.getSubclonnit().getId())
-                .build();
-    }
-
-    public Post mapDtoToPost(PostDto dto) {
-        return Post.builder()
-                .title(dto.getTitle())
-                .url(dto.getUrl())
-                .content(dto.getContent())
-                .voteCount(dto.getVoteCount())
-                .created(LocalDateTime.parse(dto.getCreated()))
-                .user(getUserOrNull(dto.getUserId()))
-                .subclonnit(getSubclonnitOrNull(dto.getSubClonnitId()))
                 .build();
     }
 

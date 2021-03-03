@@ -24,10 +24,12 @@ public class PostService {
     private final SubclonnitRepository subclonnitRepository;
     private final UserRepository userRepository;
     private final DtoService dtoService;
+    private final AuthService authService;
 
     @Transactional
     public PostDto savePost(PostDto dto) {
         Post post = dtoService.mapDtoToPost(dto);
+        post.setUser(authService.getActiveUser());
 
         postRepository.save(post);
         dto.setId(post.getId());
@@ -45,18 +47,20 @@ public class PostService {
     public List<PostDto> listPostBySubclonnit(String name) {
         Optional<Subclonnit> subclonnit = subclonnitRepository.findByName(name);
 
-        return subclonnit
-                .map(value -> postRepository.findAllBySubclonnit(value).stream().map(dtoService::mapPostToDto).collect(Collectors.toList()))
-                .orElse(null);
+        return subclonnit.map(value ->
+                postRepository.findAllBySubclonnit(value)
+                        .stream().map(dtoService::mapPostToDto).collect(Collectors.toList())
+        ).orElse(null);
     }
 
     @Transactional(readOnly = true)
     public List<PostDto> listPostByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
 
-        return user
-                .map(value -> postRepository.findAllByUser(value).stream().map(dtoService::mapPostToDto).collect(Collectors.toList()))
-                .orElse(null);
+        return user.map(value ->
+                postRepository.findAllByUser(value)
+                        .stream().map(dtoService::mapPostToDto).collect(Collectors.toList())
+        ).orElse(null);
     }
 
     @Transactional(readOnly = true)

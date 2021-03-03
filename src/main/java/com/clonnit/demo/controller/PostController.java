@@ -32,17 +32,33 @@ public class PostController {
     }
 
     @GetMapping("/c/{subclonnit}")
-    public ResponseEntity<List<PostDto>> getBySubclonnit(@PathVariable String subclonnit) {
+    public ResponseEntity<List<PostDto>> listBySubclonnit(@PathVariable String subclonnit) {
+        List<PostDto> postList = postService.listPostBySubclonnit(subclonnit);
+
+        if (postList == null) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(postService.listPostBySubclonnit(subclonnit));
+                .body(postList);
     }
 
     @GetMapping("/u/{user}")
-    public ResponseEntity<List<PostDto>> getByUsername(@PathVariable String user) {
+    public ResponseEntity<List<PostDto>> listByUsername(@PathVariable String user) {
+        List<PostDto> postList = postService.listPostByUsername(user);
+
+        if (postList == null) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(postService.listPostByUsername(user));
+                .body(postList);
     }
 
     @GetMapping("/{id}")
