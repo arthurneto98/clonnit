@@ -68,4 +68,9 @@ public class PostService {
         Optional<Post> post = postRepository.findById(id);
         return post.map(dtoService::mapPostToDto).orElse(null);
     }
+
+    public Post getPostOrNull(Integer id) {
+        Optional<Post> post = postRepository.findById(id);
+        return post.orElse(null);
+    }
 }

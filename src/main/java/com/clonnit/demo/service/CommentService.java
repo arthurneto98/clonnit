@@ -4,7 +4,6 @@ package com.clonnit.demo.service;
 import com.clonnit.demo.dto.CommentDto;
 import com.clonnit.demo.model.Comment;
 import com.clonnit.demo.model.Post;
-import com.clonnit.demo.model.Subclonnit;
 import com.clonnit.demo.model.User;
 import com.clonnit.demo.repository.CommentRepository;
 import com.clonnit.demo.repository.PostRepository;
@@ -59,5 +58,10 @@ public class CommentService {
                         .stream().map(dtoService::mapCommentToDto).collect(Collectors.toList())
         ).orElse(null);
 
+    }
+
+    public Comment getCommentOrNull(Integer id) {
+        Optional<Comment> post = commentRepository.findById(id);
+        return post.orElse(null);
     }
 }

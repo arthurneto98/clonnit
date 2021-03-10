@@ -27,7 +27,9 @@ public class Vote {
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
-//    TODO - Comment Ids
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id", referencedColumnName = "id")
+    private Comment comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

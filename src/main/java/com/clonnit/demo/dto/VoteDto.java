@@ -13,5 +13,6 @@ public class VoteDto {
     private Integer id;
     private String voteType;
     private Integer postId;
+    private Integer commentId;
     private Integer userId;
 }

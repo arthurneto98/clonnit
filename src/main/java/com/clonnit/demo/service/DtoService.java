@@ -4,25 +4,25 @@ import com.clonnit.demo.dto.CommentDto;
 import com.clonnit.demo.dto.PostDto;
 import com.clonnit.demo.dto.SubclonnitDto;
 import com.clonnit.demo.dto.VoteDto;
-import com.clonnit.demo.model.*;
+import com.clonnit.demo.model.Comment;
+import com.clonnit.demo.model.Post;
+import com.clonnit.demo.model.Subclonnit;
+import com.clonnit.demo.model.Vote;
 import com.clonnit.demo.model.enums.VoteTypeEnum;
-import com.clonnit.demo.repository.PostRepository;
-import com.clonnit.demo.repository.SubclonnitRepository;
-import com.clonnit.demo.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class DtoService {
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
-    private final SubclonnitRepository subclonnitRepository;
+    private final PostService postService;
+    private final UserService userService;
+    private final SubclonnitService subclonnitService;
+    private final CommentService commentService;
 
     public CommentDto mapCommentToDto(Comment comment) {
         return CommentDto.builder()
@@ -38,8 +38,8 @@ public class DtoService {
     public Comment mapDtoToComment(CommentDto dto) {
         return Comment.builder()
                 .id(dto.getId())
-                .post(getPostOrNull(dto.getPostId()))
-                .user(getUserOrNull(dto.getUserId()))
+                .post(postService.getPostOrNull(dto.getPostId()))
+                .user(userService.getUserOrNull(dto.getUserId()))
                 .content(dto.getContent())
                 .created(dto.getCreated())
                 .build();
@@ -65,8 +65,8 @@ public class DtoService {
                 .content(dto.getContent())
                 .voteCount(dto.getVoteCount())
                 .created(LocalDateTime.parse(dto.getCreated()))
-                .user(getUserOrNull(dto.getUserId()))
-                .subclonnit(getSubclonnitOrNull(dto.getSubClonnitId()))
+                .user(userService.getUserOrNull(dto.getUserId()))
+                .subclonnit(subclonnitService.getSubclonnitOrNull(dto.getSubClonnitId()))
                 .build();
     }
 
@@ -91,6 +91,7 @@ public class DtoService {
                 .id(vote.getId())
                 .voteType(vote.getVoteType().toString())
                 .postId(vote.getPost().getId())
+                .commentId(vote.getComment().getId())
                 .userId(vote.getUser().getId())
                 .build();
     }
@@ -98,24 +99,9 @@ public class DtoService {
     public Vote mapDtoToVote(VoteDto dto) {
         return Vote.builder()
                 .voteType(VoteTypeEnum.valueOf(dto.getVoteType()))
-                .post(getPostOrNull(dto.getPostId()))
-                .user(getUserOrNull(dto.getUserId()))
+                .post(postService.getPostOrNull(dto.getPostId()))
+                .comment(commentService.getCommentOrNull(dto.getCommentId()))
+                .user(userService.getUserOrNull(dto.getUserId()))
                 .build();
-    }
-
-    //TODO migrar
-    private Post getPostOrNull(Integer id) {
-        Optional<Post> post = postRepository.findById(id);
-        return post.orElse(null);
-    }
-
-    private User getUserOrNull(Integer id) {
-        Optional<User> post = userRepository.findById(id);
-        return post.orElse(null);
-    }
-
-    private Subclonnit getSubclonnitOrNull(Integer id) {
-        Optional<Subclonnit> post = subclonnitRepository.findById(id);
-        return post.orElse(null);
     }
 }

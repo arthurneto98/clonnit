@@ -39,4 +39,9 @@ public class SubclonnitService {
         Optional<Subclonnit> subclonnit = subclonnitRepository.findById(id);
         return subclonnit.map(dtoService::mapSubclonnitToDto).orElse(null);
     }
+
+    public Subclonnit getSubclonnitOrNull(Integer id) {
+        Optional<Subclonnit> post = subclonnitRepository.findById(id);
+        return post.orElse(null);
+    }
 }
