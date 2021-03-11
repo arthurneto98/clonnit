@@ -24,7 +24,7 @@ public class SubclonnitService {
         Subclonnit subclonnit = dtoService.mapDtoToSubclonnit(dto);
 
         subclonnitRepository.save(subclonnit);
-        dto.setId(subclonnit.getId());
+        dto = dtoService.mapSubclonnitToDto(subclonnit);
 
         return dto;
     }
@@ -38,10 +38,5 @@ public class SubclonnitService {
     public SubclonnitDto getSubclonnit(Integer id) {
         Optional<Subclonnit> subclonnit = subclonnitRepository.findById(id);
         return subclonnit.map(dtoService::mapSubclonnitToDto).orElse(null);
-    }
-
-    public Subclonnit getSubclonnitOrNull(Integer id) {
-        Optional<Subclonnit> post = subclonnitRepository.findById(id);
-        return post.orElse(null);
     }
 }

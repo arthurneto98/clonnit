@@ -23,17 +23,13 @@ public class Post {
     @NotNull
     private String title;
 
-    @Nullable
     private String url;
 
-    @Nullable
     @Lob
     private String content;
 
-    @NotNull
     private Integer voteCount;
 
-    @NotNull
     private LocalDateTime created;
 
     @ManyToOne(fetch = FetchType.LAZY)

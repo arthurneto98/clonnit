@@ -12,10 +12,4 @@ import java.util.Optional;
 @AllArgsConstructor
 @Slf4j
 public class UserService {
-    private final UserRepository userRepository;
-
-    public User getUserOrNull(Integer id) {
-        Optional<User> post = userRepository.findById(id);
-        return post.orElse(null);
-    }
 }

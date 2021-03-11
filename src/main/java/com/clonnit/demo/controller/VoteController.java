@@ -19,6 +19,7 @@ public class VoteController {
     private final VoteService voteService;
     private final AuthService authService;
 
+    //TODO Create or update?
     @PostMapping
     public ResponseEntity<VoteDto> create(@RequestBody VoteDto vote) {
         return ResponseEntity
@@ -51,4 +52,7 @@ public class VoteController {
                 ResponseEntity.status(HttpStatus.OK).body(dto) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+
+    //TODO full implementar e testar
+    //TODO Delete
 }

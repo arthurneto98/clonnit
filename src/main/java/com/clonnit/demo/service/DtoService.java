@@ -19,10 +19,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Slf4j
 public class DtoService {
-    private final PostService postService;
-    private final UserService userService;
-    private final SubclonnitService subclonnitService;
-    private final CommentService commentService;
+    private final ValidationService validationService;
 
     public CommentDto mapCommentToDto(Comment comment) {
         return CommentDto.builder()
@@ -38,10 +35,8 @@ public class DtoService {
     public Comment mapDtoToComment(CommentDto dto) {
         return Comment.builder()
                 .id(dto.getId())
-                .post(postService.getPostOrNull(dto.getPostId()))
-                .user(userService.getUserOrNull(dto.getUserId()))
+                .post(validationService.getPostOrNull(dto.getPostId()))
                 .content(dto.getContent())
-                .created(dto.getCreated())
                 .build();
     }
 
@@ -54,7 +49,7 @@ public class DtoService {
                 .voteCount(post.getVoteCount())
                 .created(post.getCreated().toString())
                 .userId(post.getUser().getId())
-                .subClonnitId(post.getSubclonnit().getId())
+                .subclonnitId(post.getSubclonnit().getId())
                 .build();
     }
 
@@ -64,9 +59,7 @@ public class DtoService {
                 .url(dto.getUrl())
                 .content(dto.getContent())
                 .voteCount(dto.getVoteCount())
-                .created(LocalDateTime.parse(dto.getCreated()))
-                .user(userService.getUserOrNull(dto.getUserId()))
-                .subclonnit(subclonnitService.getSubclonnitOrNull(dto.getSubClonnitId()))
+                .subclonnit(validationService.getSubclonnitOrNull(dto.getSubclonnitId()))
                 .build();
     }
 
@@ -99,9 +92,9 @@ public class DtoService {
     public Vote mapDtoToVote(VoteDto dto) {
         return Vote.builder()
                 .voteType(VoteTypeEnum.valueOf(dto.getVoteType()))
-                .post(postService.getPostOrNull(dto.getPostId()))
-                .comment(commentService.getCommentOrNull(dto.getCommentId()))
-                .user(userService.getUserOrNull(dto.getUserId()))
+                .post(validationService.getPostOrNull(dto.getPostId()))
+                .comment(validationService.getCommentOrNull(dto.getCommentId()))
+                .user(validationService.getUserOrNull(dto.getUserId()))
                 .build();
     }
 }

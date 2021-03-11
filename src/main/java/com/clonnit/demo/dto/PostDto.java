@@ -17,5 +17,5 @@ public class PostDto {
     private Integer voteCount;
     private String created;
     private Integer userId;
-    private Integer subClonnitId;
+    private Integer subclonnitId;
 }

@@ -24,7 +24,7 @@ public class CommentController {
                 .body(commentService.saveComment(comment));
     }
 
-    @GetMapping("/post/{id}")
+    @GetMapping("/post/{postId}")
     public ResponseEntity<List<CommentDto>> listByPost(@PathVariable Integer postId) {
         List<CommentDto> commentList = commentService.listCommentByPost(postId);
 
@@ -39,7 +39,7 @@ public class CommentController {
                 .body(commentList);
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<CommentDto>> listByUser(@PathVariable Integer userId) {
         List<CommentDto> commentList = commentService.listCommentByUser(userId);
 
@@ -53,4 +53,7 @@ public class CommentController {
                 .status(HttpStatus.OK)
                 .body(commentList);
     }
+
+    //TODO Update
+    //TODO Delete
 }

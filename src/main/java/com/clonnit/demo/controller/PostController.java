@@ -24,13 +24,6 @@ public class PostController {
                 .body(postService.savePost(post));
     }
 
-    @GetMapping
-    public ResponseEntity<List<PostDto>> list() {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(postService.listPost());
-    }
-
     @GetMapping("/c/{subclonnit}")
     public ResponseEntity<List<PostDto>> listBySubclonnit(@PathVariable String subclonnit) {
         List<PostDto> postList = postService.listPostBySubclonnit(subclonnit);
@@ -68,4 +61,9 @@ public class PostController {
                 ResponseEntity.status(HttpStatus.OK).body(dto) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+
+    //TODO get by URL /p/url
+
+    //TODO Update
+    //TODO Delete
 }

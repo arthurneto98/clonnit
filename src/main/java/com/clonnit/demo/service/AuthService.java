@@ -28,6 +28,7 @@ public class AuthService {
 
     @Transactional
     public void signup(RegisterRequestDto registerRequest) {
+        //TODO - validar user e email duplicado
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setUsername(registerRequest.getUsername());

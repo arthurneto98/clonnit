@@ -31,6 +31,5 @@ public class User {
     @NotNull
     private String email;
 
-    @NotNull
     private LocalDateTime created;
 }

@@ -22,12 +22,13 @@ public class Comment {
     @NotNull
     private String content;
 
-    @NotNull
     private LocalDateTime created;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
+
+    //TODO comment
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

@@ -1,8 +1,16 @@
 package com.clonnit.demo.model.enums;
 
 public enum VoteTypeEnum {
-    UPVOTE(Boolean.TRUE), DOWNVOTE(Boolean.FALSE);
+    UPVOTE,
+    DOWNVOTE;
 
-    VoteTypeEnum(Boolean type) {
+    private Integer value;
+    static {
+        UPVOTE.value = 1;
+        DOWNVOTE.value = -1;
+    }
+
+    public Integer getValue() {
+        return value;
     }
 }

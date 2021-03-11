@@ -33,7 +33,7 @@ public class CommentService {
         comment.setUser(authService.getActiveUser());
 
         commentRepository.save(comment);
-        dto.setId(comment.getId());
+        dto = dtoService.mapCommentToDto(comment);
 
         return dto;
     }
@@ -58,10 +58,5 @@ public class CommentService {
                         .stream().map(dtoService::mapCommentToDto).collect(Collectors.toList())
         ).orElse(null);
 
-    }
-
-    public Comment getCommentOrNull(Integer id) {
-        Optional<Comment> post = commentRepository.findById(id);
-        return post.orElse(null);
     }
 }

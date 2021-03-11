@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,11 +29,18 @@ public class PostService {
 
     @Transactional
     public PostDto savePost(PostDto dto) {
+        //TODO verificar name duplicado
+
         Post post = dtoService.mapDtoToPost(dto);
         post.setUser(authService.getActiveUser());
+        post.setCreated(LocalDateTime.now());
+        post.setVoteCount(0);
+
+        String url = dto.getTitle();
+        //TODO set url
 
         postRepository.save(post);
-        dto.setId(post.getId());
+        dto = dtoService.mapPostToDto(post);
 
         return dto;
     }
@@ -67,10 +75,5 @@ public class PostService {
     public PostDto getPost(Integer id) {
         Optional<Post> post = postRepository.findById(id);
         return post.map(dtoService::mapPostToDto).orElse(null);
-    }
-
-    public Post getPostOrNull(Integer id) {
-        Optional<Post> post = postRepository.findById(id);
-        return post.orElse(null);
     }
 }
