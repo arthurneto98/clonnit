@@ -20,8 +20,10 @@ public class SubclonnitController {
 
     @PostMapping
     public ResponseEntity<SubclonnitDto> create(@RequestBody SubclonnitDto subclonnit) {
+        HttpStatus status = subclonnit.getId() == null ? HttpStatus.CREATED : HttpStatus.OK;
+
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(status)
                 .body(subclonnitService.saveSubclonnit(subclonnit));
     }
 

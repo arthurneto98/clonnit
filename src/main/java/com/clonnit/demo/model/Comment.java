@@ -22,6 +22,8 @@ public class Comment {
     @NotNull
     private String content;
 
+    private Integer voteCount;
+
     private LocalDateTime created;
 
     @ManyToOne(fetch = FetchType.LAZY)

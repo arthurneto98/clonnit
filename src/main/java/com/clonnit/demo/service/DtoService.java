@@ -4,6 +4,7 @@ import com.clonnit.demo.dto.CommentDto;
 import com.clonnit.demo.dto.PostDto;
 import com.clonnit.demo.dto.SubclonnitDto;
 import com.clonnit.demo.dto.VoteDto;
+import com.clonnit.demo.exceptions.ClonnitException;
 import com.clonnit.demo.model.Comment;
 import com.clonnit.demo.model.Post;
 import com.clonnit.demo.model.Subclonnit;
@@ -12,8 +13,6 @@ import com.clonnit.demo.model.enums.VoteTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
@@ -55,6 +54,7 @@ public class DtoService {
 
     public Post mapDtoToPost(PostDto dto) {
         return Post.builder()
+                .id(dto.getId())
                 .title(dto.getTitle())
                 .url(dto.getUrl())
                 .content(dto.getContent())
@@ -74,27 +74,43 @@ public class DtoService {
 
     public Subclonnit mapDtoToSubclonnit(SubclonnitDto dto) {
         return Subclonnit.builder()
+                .id(dto.getId())
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .build();
     }
 
     public VoteDto mapVoteToDto(Vote vote) {
-        return VoteDto.builder()
+        VoteDto.VoteDtoBuilder dto = VoteDto.builder()
                 .id(vote.getId())
                 .voteType(vote.getVoteType().toString())
-                .postId(vote.getPost().getId())
-                .commentId(vote.getComment().getId())
-                .userId(vote.getUser().getId())
-                .build();
+                .userId(vote.getUser().getId());
+
+        if (vote.getPost() != null) {
+            dto.postId(vote.getPost().getId());
+        } else if (vote.getComment() != null) {
+            dto.commentId(vote.getComment().getId());
+        } else {
+            throw new ClonnitException("Voto sem publicação");
+        }
+
+        return dto.build();
     }
 
     public Vote mapDtoToVote(VoteDto dto) {
-        return Vote.builder()
+        Vote.VoteBuilder vote = Vote.builder()
+                .id(dto.getId())
                 .voteType(VoteTypeEnum.valueOf(dto.getVoteType()))
-                .post(validationService.getPostOrNull(dto.getPostId()))
-                .comment(validationService.getCommentOrNull(dto.getCommentId()))
-                .user(validationService.getUserOrNull(dto.getUserId()))
-                .build();
+                .user(validationService.getUserOrNull(dto.getUserId()));
+
+        if (dto.getPostId() != null) {
+            vote.post(validationService.getPostOrNull(dto.getPostId()));
+        } else if (dto.getCommentId() != null) {
+            vote.comment(validationService.getCommentOrNull(dto.getCommentId()));
+        } else {
+            throw new ClonnitException("Voto sem publicação");
+        }
+
+        return vote.build();
     }
 }

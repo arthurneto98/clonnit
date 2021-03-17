@@ -30,7 +30,11 @@ public class CommentService {
     @Transactional
     public CommentDto saveComment(CommentDto dto) {
         Comment comment = dtoService.mapDtoToComment(dto);
-        comment.setUser(authService.getActiveUser());
+
+        if (comment.getId() == null) {
+            comment.setUser(authService.getActiveUser());
+            comment.setVoteCount(0);
+        }
 
         commentRepository.save(comment);
         dto = dtoService.mapCommentToDto(comment);
@@ -46,7 +50,6 @@ public class CommentService {
                 commentRepository.findAllByPost(value)
                         .stream().map(dtoService::mapCommentToDto).collect(Collectors.toList())
         ).orElse(null);
-
     }
 
     @Transactional(readOnly = true)
@@ -57,6 +60,5 @@ public class CommentService {
                 commentRepository.findAllByUser(value)
                         .stream().map(dtoService::mapCommentToDto).collect(Collectors.toList())
         ).orElse(null);
-
     }
 }

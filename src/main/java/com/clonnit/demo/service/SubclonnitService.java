@@ -1,6 +1,7 @@
 package com.clonnit.demo.service;
 
 import com.clonnit.demo.dto.SubclonnitDto;
+import com.clonnit.demo.exceptions.ClonnitException;
 import com.clonnit.demo.model.Subclonnit;
 import com.clonnit.demo.repository.SubclonnitRepository;
 import lombok.AllArgsConstructor;
@@ -21,8 +22,12 @@ public class SubclonnitService {
 
     @Transactional
     public SubclonnitDto saveSubclonnit(SubclonnitDto dto) {
-        Subclonnit subclonnit = dtoService.mapDtoToSubclonnit(dto);
+        Optional<Subclonnit> nameVerification = subclonnitRepository.findByName(dto.getName());
+        if (nameVerification.isPresent()) {
+            throw new ClonnitException("Nome duplicado");
+        }
 
+        Subclonnit subclonnit = dtoService.mapDtoToSubclonnit(dto);
         subclonnitRepository.save(subclonnit);
         dto = dtoService.mapSubclonnitToDto(subclonnit);
 

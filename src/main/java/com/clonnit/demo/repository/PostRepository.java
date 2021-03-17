@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findAllBySubclonnit(Subclonnit subclonnit);
     List<Post> findAllByUser(User user);
+    Optional<Post> findByUrl(String url);
 }

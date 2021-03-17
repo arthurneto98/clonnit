@@ -19,8 +19,10 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostDto> create(@RequestBody PostDto post) {
+        HttpStatus status = post.getId() == null ? HttpStatus.CREATED : HttpStatus.OK;
+
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(status)
                 .body(postService.savePost(post));
     }
 
@@ -62,8 +64,13 @@ public class PostController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    //TODO get by URL /p/url
+    @GetMapping("/p/{url}")
+    public ResponseEntity<PostDto> getByUrl(@PathVariable String url) {
+        PostDto dto = postService.getPostByUrl(url);
+        return dto != null ?
+                ResponseEntity.status(HttpStatus.OK).body(dto) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
 
-    //TODO Update
     //TODO Delete
 }

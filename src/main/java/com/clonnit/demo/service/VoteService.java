@@ -26,23 +26,24 @@ public class VoteService {
     @Transactional
     public VoteDto saveVote(VoteDto dto) {
         Vote vote = dtoService.mapDtoToVote(dto);
-        vote.setUser(authService.getActiveUser());
+
+        if (vote.getId() == null) {
+            vote.setUser(authService.getActiveUser());
+        }
 
         voteRepository.save(vote);
 
         Post post = vote.getPost();
         Comment comment = vote.getComment();
-        if(post != null) {
+        if (post != null) {
             post.setVoteCount(post.getVoteCount() + vote.getVoteType().getValue());
-//        } else if (comment != null) {
-//            comment.setVoteCount(comment.getVoteCount() + vote.getVoteType().getValue());
+        } else if (comment != null) {
+            comment.setVoteCount(comment.getVoteCount() + vote.getVoteType().getValue());
         } else {
             throw new ClonnitException("Voto sem publicação");
         }
 
-        dto = dtoService.mapVoteToDto(vote);
-
-        return dto;
+        return dtoService.mapVoteToDto(vote);
     }
 
     @Transactional(readOnly = true)

@@ -19,8 +19,10 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<CommentDto> create(@RequestBody CommentDto comment) {
+        HttpStatus status = comment.getId() == null ? HttpStatus.CREATED : HttpStatus.OK;
+
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(status)
                 .body(commentService.saveComment(comment));
     }
 
@@ -54,6 +56,5 @@ public class CommentController {
                 .body(commentList);
     }
 
-    //TODO Update
     //TODO Delete
 }

@@ -3,6 +3,7 @@ package com.clonnit.demo.service;
 import com.clonnit.demo.dto.AuthResponseDto;
 import com.clonnit.demo.dto.LoginRequestDto;
 import com.clonnit.demo.dto.RegisterRequestDto;
+import com.clonnit.demo.exceptions.ClonnitException;
 import com.clonnit.demo.model.User;
 import com.clonnit.demo.repository.UserRepository;
 import com.clonnit.demo.security.JwtProvider;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -28,7 +30,13 @@ public class AuthService {
 
     @Transactional
     public void signup(RegisterRequestDto registerRequest) {
-        //TODO - validar user e email duplicado
+        Optional<User> usernameVerification = userRepository.findByUsername(registerRequest.getUsername());
+        Optional<User> emailVerification = userRepository.findByEmail(registerRequest.getEmail());
+
+        if (usernameVerification.isPresent() || emailVerification.isPresent()) {
+            throw new ClonnitException("Usuário e email já utilizados");
+        }
+
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setUsername(registerRequest.getUsername());
