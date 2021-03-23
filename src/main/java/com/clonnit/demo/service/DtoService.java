@@ -10,33 +10,59 @@ import com.clonnit.demo.model.Post;
 import com.clonnit.demo.model.Subclonnit;
 import com.clonnit.demo.model.Vote;
 import com.clonnit.demo.model.enums.VoteTypeEnum;
+import com.clonnit.demo.repository.CommentRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class DtoService {
     private final ValidationService validationService;
+    private final CommentRepository commentRepository;
 
     public CommentDto mapCommentToDto(Comment comment) {
-        return CommentDto.builder()
+        CommentDto.CommentDtoBuilder dto = CommentDto.builder()
                 .id(comment.getId())
-                .postId(comment.getPost().getId())
                 .userId(comment.getUser().getId())
                 .userUsername(comment.getUser().getUsername())
                 .content(comment.getContent())
-                .created(comment.getCreated())
-                .build();
+                .created(comment.getCreated());
+
+        if (comment.getPost() != null) {
+            dto.postId(comment.getPost().getId());
+        }
+
+        if (comment.getParentComment() != null) {
+            dto.parentCommentId(comment.getParentComment().getId());
+        }
+
+        ArrayList<Comment> childComments = getChildComments(comment);
+        if (!childComments.isEmpty()) {
+            ArrayList<CommentDto> childCommentsDto = new ArrayList<>();
+            childComments.forEach(c -> childCommentsDto.add(mapCommentToDto(c)));
+
+            dto.childComments(childCommentsDto);
+        }
+
+        return dto.build();
+
     }
 
     public Comment mapDtoToComment(CommentDto dto) {
-        return Comment.builder()
+        Comment.CommentBuilder comment = Comment.builder()
                 .id(dto.getId())
-                .post(validationService.getPostOrNull(dto.getPostId()))
-                .content(dto.getContent())
-                .build();
+                .parentComment(validationService.getCommentOrNull(dto.getParentCommentId()))
+                .content(dto.getContent());
+
+        if (dto.getPostId() != null) {
+            comment.post(validationService.getPostOrNull(dto.getPostId()));
+        }
+
+        return comment.build();
     }
 
     public PostDto mapPostToDto(Post post) {
@@ -112,5 +138,9 @@ public class DtoService {
         }
 
         return vote.build();
+    }
+
+    private ArrayList<Comment> getChildComments(Comment comment) {
+        return new ArrayList<>(commentRepository.findAllByParentComment(comment));
     }
 }

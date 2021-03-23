@@ -30,7 +30,9 @@ public class Comment {
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
-    //TODO comment
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parentcomment_id", referencedColumnName = "id")
+    private Comment parentComment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

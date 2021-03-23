@@ -47,8 +47,11 @@ public class CommentService {
         Optional<Post> post = postRepository.findById(postId);
 
         return post.map(value ->
-                commentRepository.findAllByPost(value)
-                        .stream().map(dtoService::mapCommentToDto).collect(Collectors.toList())
+                commentRepository
+                        .findAllByPost(value)
+                        .stream()
+                        .map(dtoService::mapCommentToDto)
+                        .collect(Collectors.toList())
         ).orElse(null);
     }
 
@@ -57,8 +60,11 @@ public class CommentService {
         Optional<User> user = userRepository.findById(userId);
 
         return user.map(value ->
-                commentRepository.findAllByUser(value)
-                        .stream().map(dtoService::mapCommentToDto).collect(Collectors.toList())
+                commentRepository
+                        .findAllByUser(value)
+                        .stream()
+                        .map(dtoService::mapCommentToDto)
+                        .collect(Collectors.toList())
         ).orElse(null);
     }
 }
