@@ -3,6 +3,7 @@ package com.clonnit.demo.controller;
 import com.clonnit.demo.dto.VoteDto;
 import com.clonnit.demo.exceptions.ClonnitException;
 import com.clonnit.demo.model.User;
+import com.clonnit.demo.model.Vote;
 import com.clonnit.demo.service.AuthService;
 import com.clonnit.demo.service.VoteService;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ public class VoteController {
     @PostMapping
     public ResponseEntity<VoteDto> create(@RequestBody VoteDto vote) {
         HttpStatus status = vote.getId() == null ? HttpStatus.CREATED : HttpStatus.OK;
+        //todo verificar se o user logado é o editando
 
         return ResponseEntity
                 .status(status)
@@ -54,5 +56,19 @@ public class VoteController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    //TODO Delete
+    //TODO testar
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
+        User user = authService.getActiveUser();
+        Vote vote = voteService.getVote(id);
+
+        if (vote == null) {
+            throw new ClonnitException("Voto não encontrado");
+        } else if (vote.getUser() != user) {
+            throw new ClonnitException("Não é permitido alterar o voto de outro usuário");
+        }
+
+        voteService.deleteVote(vote);
+        return ResponseEntity.status(HttpStatus.OK).body("Voto" + id + " removido com sucesso");
+    }
 }

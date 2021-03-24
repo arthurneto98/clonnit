@@ -1,12 +1,8 @@
 package com.clonnit.demo.service;
 
 import com.clonnit.demo.dto.PostDto;
-import com.clonnit.demo.model.Post;
-import com.clonnit.demo.model.Subclonnit;
-import com.clonnit.demo.model.User;
-import com.clonnit.demo.repository.PostRepository;
-import com.clonnit.demo.repository.SubclonnitRepository;
-import com.clonnit.demo.repository.UserRepository;
+import com.clonnit.demo.model.*;
+import com.clonnit.demo.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +22,10 @@ public class PostService {
     private final PostRepository postRepository;
     private final SubclonnitRepository subclonnitRepository;
     private final UserRepository userRepository;
+    private final VoteRepository voteRepository;
+    private final CommentRepository commentRepository;
+    private final VoteService voteService;
+    private final CommentService commentService;
     private final DtoService dtoService;
     private final AuthService authService;
 
@@ -79,15 +79,29 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostDto getPost(Integer id) {
-        Optional<Post> post = postRepository.findById(id);
-        return post.map(dtoService::mapPostToDto).orElse(null);
+    public Post getPost(Integer id) {
+        return postRepository.findById(id).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public PostDto getPostDto(Integer id) {
+        return postRepository.findById(id).map(dtoService::mapPostToDto).orElse(null);
     }
 
     @Transactional(readOnly = true)
     public PostDto getPostByUrl(String url) {
         Optional<Post> post = postRepository.findByUrl(url);
         return post.map(dtoService::mapPostToDto).orElse(null);
+    }
+
+    @Transactional
+    public void deletePost(Post post) {
+        List<Vote> votes = voteRepository.findAllByPost(post);
+        votes.forEach(voteService::deleteVote);
+        List<Comment> comments = commentRepository.findAllByPost(post);
+        comments.forEach(commentService::deleteComment);
+
+        postRepository.delete(post);
     }
 
     //TODO migrar?

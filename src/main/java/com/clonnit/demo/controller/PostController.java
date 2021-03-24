@@ -1,6 +1,10 @@
 package com.clonnit.demo.controller;
 
 import com.clonnit.demo.dto.PostDto;
+import com.clonnit.demo.exceptions.ClonnitException;
+import com.clonnit.demo.model.Post;
+import com.clonnit.demo.model.User;
+import com.clonnit.demo.service.AuthService;
 import com.clonnit.demo.service.PostService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +20,12 @@ import java.util.List;
 @Slf4j
 public class PostController {
     private final PostService postService;
+    private final AuthService authService;
 
     @PostMapping
     public ResponseEntity<PostDto> create(@RequestBody PostDto post) {
         HttpStatus status = post.getId() == null ? HttpStatus.CREATED : HttpStatus.OK;
+        //todo verificar se o user logado é o editando
 
         return ResponseEntity
                 .status(status)
@@ -58,7 +64,7 @@ public class PostController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getById(@PathVariable Integer id) {
-        PostDto dto = postService.getPost(id);
+        PostDto dto = postService.getPostDto(id);
         return dto != null ?
                 ResponseEntity.status(HttpStatus.OK).body(dto) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -72,5 +78,19 @@ public class PostController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    //TODO Delete
+    //TODO testar
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
+        User user = authService.getActiveUser();
+        Post post = postService.getPost(id);
+
+        if (post == null) {
+            throw new ClonnitException("Post não encontrado");
+        } else if (post.getUser() != user) {
+            throw new ClonnitException("Não é permitido alterar o post de outro usuário");
+        }
+
+        postService.deletePost(post);
+        return ResponseEntity.status(HttpStatus.OK).body("Post " + id + "removido com sucesso");
+    }
 }

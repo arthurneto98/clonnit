@@ -12,8 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -24,22 +22,20 @@ public class ValidationService {
     private final UserRepository userRepository;
 
     public Comment getCommentOrNull(Integer id) {
-        Optional<Comment> post = commentRepository.findById(id);
-        return post.orElse(null);
+        return commentRepository.findById(id).orElse(null);
     }
 
     public Post getPostOrNull(Integer id) {
-        Optional<Post> post = postRepository.findById(id);
-        return post.orElse(null);
+        return postRepository.findById(id).orElse(null);
     }
 
     public Subclonnit getSubclonnitOrNull(Integer id) {
-        Optional<Subclonnit> post = subclonnitRepository.findById(id);
-        return post.orElse(null);
+        return subclonnitRepository.findById(id).orElse(null);
     }
 
     public User getUserOrNull(Integer id) {
-        Optional<User> post = userRepository.findById(id);
-        return post.orElse(null);
+        return userRepository.findById(id).orElse(null);
     }
+
+    //TODO repensar
 }

@@ -34,4 +34,6 @@ public class Subclonnit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    //TODO moderação
 }

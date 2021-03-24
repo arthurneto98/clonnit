@@ -47,6 +47,11 @@ public class VoteService {
     }
 
     @Transactional(readOnly = true)
+    public Vote getVote(Integer id) {
+        return voteRepository.findById(id).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
     public VoteDto getVoteByPost(Integer postId, Integer userId) {
         Post post = validationService.getPostOrNull(postId);
         User user = validationService.getUserOrNull(userId);
@@ -64,5 +69,10 @@ public class VoteService {
         Optional<Vote> vote = voteRepository.findByCommentAndUser(comment, user);
 
         return vote.map(dtoService::mapVoteToDto).orElse(null);
+    }
+
+    @Transactional
+    public void deleteVote(Vote vote) {
+        voteRepository.delete(vote);
     }
 }

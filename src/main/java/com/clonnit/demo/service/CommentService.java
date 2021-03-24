@@ -5,9 +5,11 @@ import com.clonnit.demo.dto.CommentDto;
 import com.clonnit.demo.model.Comment;
 import com.clonnit.demo.model.Post;
 import com.clonnit.demo.model.User;
+import com.clonnit.demo.model.Vote;
 import com.clonnit.demo.repository.CommentRepository;
 import com.clonnit.demo.repository.PostRepository;
 import com.clonnit.demo.repository.UserRepository;
+import com.clonnit.demo.repository.VoteRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final VoteRepository voteRepository;
+    private final VoteService voteService;
     private final DtoService dtoService;
     private final AuthService authService;
 
@@ -66,5 +70,20 @@ public class CommentService {
                         .map(dtoService::mapCommentToDto)
                         .collect(Collectors.toList())
         ).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public Comment getComment(Integer id) {
+        return commentRepository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public void deleteComment(Comment comment) {
+        List<Vote> votes = voteRepository.findAllByComment(comment);
+        votes.forEach(voteService::deleteVote);
+        List<Comment> comments = commentRepository.findAllByParentComment(comment);
+        comments.forEach(this::deleteComment);
+
+        commentRepository.delete(comment);
     }
 }
