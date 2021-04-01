@@ -36,6 +36,4 @@ public class ValidationService {
     public User getUserOrNull(Integer id) {
         return userRepository.findById(id).orElse(null);
     }
-
-    //TODO repensar
 }

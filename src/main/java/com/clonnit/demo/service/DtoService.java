@@ -90,20 +90,23 @@ public class DtoService {
     }
 
     public SubclonnitDto mapSubclonnitToDto(Subclonnit subclonnit) {
-        return SubclonnitDto.builder()
+        SubclonnitDto.SubclonnitDtoBuilder subclonnitDtoBuilder = SubclonnitDto.builder()
                 .id(subclonnit.getId())
                 .name(subclonnit.getName())
                 .description(subclonnit.getDescription())
                 .postNumber(subclonnit.getPostList().size())
-                .build();
+                .userId(subclonnit.getUser().getId());
+
+        return subclonnitDtoBuilder.build();
     }
 
     public Subclonnit mapDtoToSubclonnit(SubclonnitDto dto) {
-        return Subclonnit.builder()
+        Subclonnit.SubclonnitBuilder subclonnitBuilder = Subclonnit.builder()
                 .id(dto.getId())
                 .name(dto.getName())
-                .description(dto.getDescription())
-                .build();
+                .description(dto.getDescription());
+
+        return subclonnitBuilder.build();
     }
 
     public VoteDto mapVoteToDto(Vote vote) {

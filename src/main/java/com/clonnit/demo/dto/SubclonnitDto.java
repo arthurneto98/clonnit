@@ -14,4 +14,5 @@ public class SubclonnitDto {
     private String name;
     private String description;
     private Integer postNumber;
+    private Integer userId;
 }

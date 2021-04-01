@@ -104,7 +104,6 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    //TODO migrar?
     private String normalize(String s) {
         s = Normalizer.normalize(s, Normalizer.Form.NFD);
         s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");

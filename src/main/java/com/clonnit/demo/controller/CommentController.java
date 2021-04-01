@@ -24,9 +24,14 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<CommentDto> create(@RequestBody CommentDto comment) {
-        HttpStatus status = comment.getId() == null ? HttpStatus.CREATED : HttpStatus.OK;
-        //todo verificar se o user logado é o editando
+        User user = authService.getActiveUser();
+        Boolean isUpdate = comment.getId() != null;
 
+        if (isUpdate && !comment.getUserId().equals(user.getId())) {
+            throw new ClonnitException("Não é permitido editar o comentário de outro usuário");
+        }
+
+        HttpStatus status = isUpdate ? HttpStatus.OK : HttpStatus.CREATED;
         return ResponseEntity
                 .status(status)
                 .body(commentService.saveComment(comment));
@@ -62,7 +67,6 @@ public class CommentController {
                 .body(commentList);
     }
 
-    //TODO testar
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         User user = authService.getActiveUser();

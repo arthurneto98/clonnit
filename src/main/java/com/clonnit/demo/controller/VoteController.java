@@ -22,9 +22,15 @@ public class VoteController {
 
     @PostMapping
     public ResponseEntity<VoteDto> create(@RequestBody VoteDto vote) {
-        HttpStatus status = vote.getId() == null ? HttpStatus.CREATED : HttpStatus.OK;
-        //todo verificar se o user logado é o editando
+        User user = authService.getActiveUser();
+        Boolean isUpdate = vote.getId() != null;
 
+        if (isUpdate && !vote.getUserId().equals(user.getId())) {
+            throw new ClonnitException("Não é permitido editar o voto de outro usuário");
+        }
+
+
+        HttpStatus status = isUpdate ? HttpStatus.OK : HttpStatus.CREATED;
         return ResponseEntity
                 .status(status)
                 .body(voteService.saveVote(vote));
@@ -56,7 +62,6 @@ public class VoteController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    //TODO testar
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         User user = authService.getActiveUser();

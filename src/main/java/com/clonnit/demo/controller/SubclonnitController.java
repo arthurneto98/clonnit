@@ -1,6 +1,9 @@
 package com.clonnit.demo.controller;
 
 import com.clonnit.demo.dto.SubclonnitDto;
+import com.clonnit.demo.exceptions.ClonnitException;
+import com.clonnit.demo.model.User;
+import com.clonnit.demo.service.AuthService;
 import com.clonnit.demo.service.SubclonnitService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +20,18 @@ import java.util.List;
 @Slf4j
 public class SubclonnitController {
     private final SubclonnitService subclonnitService;
+    private final AuthService authService;
 
     @PostMapping
     public ResponseEntity<SubclonnitDto> create(@RequestBody SubclonnitDto subclonnit) {
-        HttpStatus status = subclonnit.getId() == null ? HttpStatus.CREATED : HttpStatus.OK;
+        User user = authService.getActiveUser();
+        Boolean isUpdate = subclonnit.getId() != null;
 
+        if (isUpdate && !subclonnit.getUserId().equals(user.getId())) {
+            throw new ClonnitException("Não é permitido editar o subclonnit de outro usuário");
+        }
+
+        HttpStatus status = isUpdate ? HttpStatus.OK : HttpStatus.CREATED;
         return ResponseEntity
                 .status(status)
                 .body(subclonnitService.saveSubclonnit(subclonnit));

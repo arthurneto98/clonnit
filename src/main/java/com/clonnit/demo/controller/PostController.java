@@ -24,9 +24,15 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostDto> create(@RequestBody PostDto post) {
-        HttpStatus status = post.getId() == null ? HttpStatus.CREATED : HttpStatus.OK;
-        //todo verificar se o user logado é o editando
+        User user = authService.getActiveUser();
+        Boolean isUpdate = post.getId() != null;
 
+        if (isUpdate && !post.getUserId().equals(user.getId())) {
+            throw new ClonnitException("Não é permitido editar o post de outro usuário");
+        }
+
+
+        HttpStatus status = isUpdate ? HttpStatus.OK : HttpStatus.CREATED;
         return ResponseEntity
                 .status(status)
                 .body(postService.savePost(post));
@@ -78,7 +84,6 @@ public class PostController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    //TODO testar
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         User user = authService.getActiveUser();
